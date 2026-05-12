@@ -452,6 +452,30 @@
     .step-card h3 { font-size:1.05rem; font-weight:700; margin-bottom:.55rem; }
     .step-card p { color:var(--muted); font-size:.88rem; line-height:1.7; }
 
+    /* ===== MODAL PRIVACIDADE ===== */
+    .modal-overlay {
+      position:fixed; inset:0; z-index:9000;
+      background:rgba(0,0,0,.78); backdrop-filter:blur(8px);
+      display:flex; align-items:center; justify-content:center; padding:1.5rem;
+      opacity:0; pointer-events:none; transition:opacity .3s var(--ease);
+    }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+    .modal-box {
+      background:#0d0d0d; border:1px solid var(--border); border-radius:var(--radius);
+      padding:2.5rem; max-width:540px; width:100%; position:relative;
+      transform:translateY(24px); transition:transform .35s var(--ease);
+    }
+    .modal-overlay.open .modal-box { transform:translateY(0); }
+    .modal-close {
+      position:absolute; top:1rem; right:1.1rem;
+      background:none; border:none; color:var(--muted); font-size:1.35rem;
+      cursor:none; line-height:1; transition:color var(--tr);
+    }
+    .modal-close:hover { color:var(--text); }
+    .modal-box h3 { font-size:1.15rem; font-weight:700; margin-bottom:1rem; }
+    .modal-box p { color:var(--muted); font-size:.9rem; line-height:1.85; }
+    .modal-box a { color:var(--g1); }
+
     /* ===== RESPONSIVE ===== */
     @media(max-width:768px){
       nav.desk{display:none;} .hdr-cta{display:none;} .hbg{display:flex;}
@@ -465,6 +489,38 @@
       .fi{flex-direction:column;text-align:center;} .fl{justify-content:center;}
     }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Manual.do.Dev",
+    "description": "Agência digital especializada em criação de sites, ecommerces, agentes de IA e automações para pequenas e médias empresas em Uberaba, MG.",
+    "url": "https://manualdodev.com.br",
+    "telephone": "+55-34-99123-4567",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Uberaba",
+      "addressRegion": "MG",
+      "addressCountry": "BR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -19.7472,
+      "longitude": -47.9381
+    },
+    "openingHours": "Mo-Fr 08:00-18:00",
+    "priceRange": "R$ 1.500 - R$ 5.000",
+    "serviceArea": {
+      "@type": "GeoCircle",
+      "geoMidpoint": {
+        "@type": "GeoCoordinates",
+        "latitude": -19.7472,
+        "longitude": -47.9381
+      },
+      "geoRadius": "100000"
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -537,15 +593,15 @@
         <!-- STATS — altere os numeros e textos -->
         <div class="hero-stats rv d4">
           <div class="stat">
-            <span class="snum" data-target="50" data-suffix="+">0</span>
+            <span class="snum" data-target="50" data-suffix="+">50+</span>
             <span class="slbl">Projetos entregues</span>
           </div>
           <div class="stat">
-            <span class="snum" data-target="3" data-suffix=" dias">0</span>
+            <span class="snum" data-target="3" data-suffix=" dias">3 dias</span>
             <span class="slbl">Entrega média</span>
           </div>
           <div class="stat">
-            <span class="snum" data-target="100" data-suffix="%">0</span>
+            <span class="snum" data-target="100" data-suffix="%">100%</span>
             <span class="slbl">Satisfação garantida</span>
           </div>
         </div>
@@ -954,10 +1010,20 @@
           <!-- WHATSAPP — troque 34991234567 -->
           <a href="https://wa.me/5534991234567" target="_blank" rel="noopener">WhatsApp</a>
         </div>
+        <a href="#privacidade" id="privLink" style="color:var(--muted);font-size:12px;text-decoration:none;transition:color .3s;" onmouseover="this.style.color='var(--g1)'" onmouseout="this.style.color='var(--muted)'">Política de Privacidade</a>
         <p class="fcp">&#169; 2026 Manual.do.Dev &#183; Todos os direitos reservados</p>
       </div>
     </div>
   </footer>
+
+  <!-- Modal Política de Privacidade -->
+  <div class="modal-overlay" id="privModal" role="dialog" aria-modal="true" aria-label="Política de Privacidade">
+    <div class="modal-box">
+      <button class="modal-close" id="privClose" aria-label="Fechar">&#x2715;</button>
+      <h3>Política de Privacidade</h3>
+      <p>Esta política descreve como a Manual.do.Dev coleta e usa seus dados. Coletamos apenas nome, e-mail e WhatsApp fornecidos voluntariamente pelo formulário de contato, usados exclusivamente para responder sua solicitação. Não compartilhamos seus dados com terceiros. Em conformidade com a LGPD (Lei 13.709/2018). Dúvidas: <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#116;&#111;&#64;&#109;&#97;&#110;&#117;&#97;&#108;&#100;&#111;&#100;&#101;&#118;&#46;&#99;&#111;&#109;&#46;&#98;&#114;">&#99;&#111;&#110;&#116;&#97;&#116;&#111;&#64;&#109;&#97;&#110;&#117;&#97;&#108;&#100;&#111;&#100;&#101;&#118;&#46;&#99;&#111;&#109;&#46;&#98;&#114;</a></p>
+    </div>
+  </div>
 
   <!-- BOTAO FLUTUANTE WHATSAPP — troque 34991234567 -->
   <a href="https://wa.me/5534991234567?text=Ola!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orcamento." class="waf" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
@@ -1076,6 +1142,7 @@
       var target = parseInt(el.getAttribute("data-target"), 10);
       var suf = el.getAttribute("data-suffix") || "";
       var dur = 1800, start = null;
+      el.textContent = "0";
       function step(ts) {
         if (!start) start = ts;
         var p = Math.min((ts - start) / dur, 1);
@@ -1168,6 +1235,21 @@
       /* WHATSAPP — troque 34991234567 pelo numero real */
       window.open("https://wa.me/5534991234567?text=" + encodeURIComponent(txt), "_blank", "noopener");
     }
+    /* =====================================================
+       MODAL PRIVACIDADE
+       ===================================================== */
+    (function() {
+      var overlay = document.getElementById("privModal");
+      var link    = document.getElementById("privLink");
+      var close   = document.getElementById("privClose");
+      function openModal(e) { e.preventDefault(); overlay.classList.add("open"); document.body.style.overflow = "hidden"; }
+      function closeModal() { overlay.classList.remove("open"); document.body.style.overflow = ""; }
+      link.addEventListener("click", openModal);
+      close.addEventListener("click", closeModal);
+      overlay.addEventListener("click", function(e) { if (e.target === overlay) closeModal(); });
+      document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeModal(); });
+    })();
+
     /* =====================================================
        FAQ ACCORDION
        ===================================================== */
