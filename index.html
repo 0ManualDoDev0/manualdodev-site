@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Manual.do.Dev — Criação de sites, ecommerces, agentes de IA e automações para PMEs em Uberaba, MG." />
+  <meta name="keywords" content="criação de sites, ecommerce, agente de IA, automações, Uberaba, MG, agência digital premium" />
+  <meta property="og:title" content="Manual.do.Dev — Seu negócio digital, do zero ao topo" />
+  <meta property="og:description" content="Sites, ecommerces, agentes de IA e automações para PMEs em Uberaba, MG." />
+  <meta property="og:type" content="website" />
+  <title>Manual.do.Dev — Seu negócio digital, do zero ao topo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       VARIÁVEIS — altere aqui para customizar todo o visual
+       ============================================================ */
+    :root {
+      --bg: #050505;
+      --surface: rgba(255,255,255,.03);
+      --surface-hover: rgba(255,255,255,.06);
+      --g1: #00ff88;
+      --g2: #00d4ff;
+      --gradient: linear-gradient(135deg, #00ff88, #00d4ff);
+      --text: #ffffff;
+      --muted: #6b7280;
+      --dim: rgba(255,255,255,.65);
+      --border: rgba(255,255,255,.07);
+      --radius: 20px;
+      --blur: 22px;
+      --ease: cubic-bezier(.4,0,.2,1);
+      --tr: .35s cubic-bezier(.4,0,.2,1);
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Inter", system-ui, sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+      cursor: none;
+    }
+    h1,h2,h3 { font-family:"Space Grotesk",sans-serif; line-height:1.15; letter-spacing:-0.03em; }
+
+    /* Gradient text */
+    .gt {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Layout */
+    .container { max-width:1120px; margin:0 auto; padding:0 1.5rem; }
+    section { padding:7rem 0; position:relative; z-index:1; }
+
+    /* ===== CURSOR ===== */
+    #cdot {
+      width:8px; height:8px; background:var(--g1); border-radius:50%;
+      position:fixed; top:0; left:0; pointer-events:none; z-index:9999;
+      transform:translate(-50%,-50%);
+      transition:width .2s, height .2s, background .2s;
+    }
+    #cring {
+      width:38px; height:38px;
+      border:1.5px solid rgba(0,255,136,.45); border-radius:50%;
+      position:fixed; top:0; left:0; pointer-events:none; z-index:9998;
+      transform:translate(-50%,-50%);
+      transition:width .3s, height .3s, border-color .3s;
+    }
+    #cdot.h { width:14px; height:14px; background:var(--g2); }
+    #cring.h { width:58px; height:58px; border-color:rgba(0,212,255,.35); }
+
+    /* ===== CANVAS ===== */
+    #cvs { position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.9; }
+
+    /* ===== HEADER ===== */
+    header {
+      position:fixed; top:0; left:0; right:0; z-index:1000;
+      padding:1.35rem 0; transition:all var(--tr);
+    }
+    header.scrolled {
+      background:rgba(5,5,5,.88);
+      backdrop-filter:blur(24px) saturate(180%);
+      border-bottom:1px solid var(--border);
+      padding:.8rem 0;
+    }
+    header .container { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    .logo {
+      font-family:"Space Grotesk",sans-serif; font-size:1.4rem; font-weight:800;
+      text-decoration:none; color:var(--text); letter-spacing:-0.05em;
+    }
+    .logo-g { background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    nav.desk { display:flex; align-items:center; gap:2rem; }
+    nav.desk a {
+      color:var(--muted); text-decoration:none; font-size:.88rem; font-weight:500;
+      transition:color var(--tr); position:relative;
+    }
+    nav.desk a::after {
+      content:""; position:absolute; bottom:-3px; left:0;
+      width:0; height:1.5px; background:var(--gradient);
+      transition:width var(--tr);
+    }
+    nav.desk a:hover { color:var(--text); }
+    nav.desk a:hover::after { width:100%; }
+
+    /* Buttons */
+    .btn {
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.8rem 1.75rem; border-radius:100px;
+      font-family:"Inter",sans-serif; font-size:.9rem; font-weight:600;
+      text-decoration:none; border:none; cursor:none;
+      transition:all var(--tr); position:relative; overflow:hidden;
+    }
+    .btn-g { background:var(--gradient); color:#050505; }
+    .btn-g::before {
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(135deg,#00d4ff,#00ff88);
+      opacity:0; transition:opacity var(--tr);
+    }
+    .btn-g:hover::before { opacity:1; }
+    .btn-g:hover { transform:translateY(-2px); box-shadow:0 16px 48px rgba(0,255,136,.3); }
+    .btn-g span { position:relative; z-index:1; }
+    .btn-o { background:transparent; color:var(--text); border:1px solid var(--border); }
+    .btn-o:hover { border-color:rgba(0,255,136,.35); background:rgba(0,255,136,.05); transform:translateY(-2px); }
+
+    /* Hamburger */
+    .hbg { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:none; padding:4px; }
+    .hbg span { display:block; width:22px; height:1.5px; background:var(--text); transition:all var(--tr); }
+    .hbg.a span:nth-child(1) { transform:rotate(45deg) translate(4.5px,4.5px); }
+    .hbg.a span:nth-child(2) { opacity:0; }
+    .hbg.a span:nth-child(3) { transform:rotate(-45deg) translate(4.5px,-4.5px); }
+    .mnav { display:none; flex-direction:column; background:rgba(5,5,5,.97); backdrop-filter:blur(20px); border-top:1px solid var(--border); padding:.5rem 0; }
+    .mnav a { display:block; padding:.85rem 1.5rem; color:var(--muted); text-decoration:none; font-size:.95rem; transition:color var(--tr); }
+    .mnav a:hover { color:var(--g1); }
+    .mnav.open { display:flex; }
+
+    /* ===== HERO ===== */
+    #hero { min-height:100vh; display:flex; align-items:center; padding-top:6rem; overflow:hidden; }
+    .hero-glow {
+      position:absolute; inset:0; pointer-events:none;
+      background:
+        radial-gradient(ellipse 80% 55% at 65% 15%, rgba(0,255,136,.07) 0%, transparent 60%),
+        radial-gradient(ellipse 55% 45% at 15% 80%, rgba(0,212,255,.05) 0%, transparent 60%);
+      animation:hglow 9s ease-in-out infinite alternate;
+    }
+    @keyframes hglow { from{opacity:.7;transform:scale(1);} to{opacity:1;transform:scale(1.07);} }
+    .hero-content { position:relative; z-index:2; max-width:840px; }
+    .badge {
+      display:inline-flex; align-items:center; gap:.6rem;
+      background:rgba(0,255,136,.07); border:1px solid rgba(0,255,136,.2);
+      color:var(--g1); padding:.45rem 1.1rem; border-radius:100px;
+      font-size:.8rem; font-weight:600; margin-bottom:2rem; letter-spacing:.03em;
+    }
+    .bdot { width:6px; height:6px; background:var(--g1); border-radius:50%; animation:bpulse 2s infinite; }
+    @keyframes bpulse { 0%,100%{transform:scale(1);opacity:1;} 50%{transform:scale(1.7);opacity:.4;} }
+    .hero-title {
+      font-size:clamp(2.8rem,6.5vw,5rem); font-weight:800;
+      margin-bottom:1.5rem; letter-spacing:-0.04em; line-height:1.08;
+    }
+    .hero-title .line2 { display:block; }
+    .tw-wrap { display:inline-block; }
+    .tw {
+      display:inline-block; border-right:3px solid var(--g1);
+      white-space:nowrap; overflow:hidden; vertical-align:bottom; min-width:2px;
+    }
+    .hero-sub {
+      font-size:clamp(1rem,2vw,1.2rem); color:var(--dim);
+      max-width:560px; margin-bottom:3rem; line-height:1.75;
+    }
+    .hero-ctas { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:4.5rem; }
+    .hero-stats { display:flex; gap:3rem; flex-wrap:wrap; padding-top:2.5rem; border-top:1px solid var(--border); }
+    .stat { display:flex; flex-direction:column; }
+    .snum {
+      font-family:"Space Grotesk",sans-serif; font-size:2.4rem; font-weight:800; line-height:1;
+      background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .slbl { font-size:.78rem; color:var(--muted); margin-top:.3rem; font-weight:500; }
+
+    /* ===== SECTION HEADER ===== */
+    .sh { text-align:center; margin-bottom:4rem; }
+    .slabel { display:inline-block; font-size:.7rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--g1); margin-bottom:1rem; }
+    .stitle { font-size:clamp(2rem,4vw,3rem); font-weight:800; margin-bottom:.75rem; }
+    .ssub { color:var(--muted); font-size:1.05rem; max-width:520px; margin:0 auto; }
+
+    /* ===== GLASS CARD ===== */
+    .gc {
+      background:var(--surface); backdrop-filter:blur(var(--blur));
+      border:1px solid var(--border); border-radius:var(--radius);
+      position:relative; overflow:hidden; transition:all var(--tr);
+    }
+    .gc::after {
+      content:""; position:absolute; inset:0; border-radius:inherit;
+      background:var(--gradient); opacity:0;
+      transition:opacity var(--tr);
+      mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite:exclude;
+      padding:1px; pointer-events:none;
+    }
+    .gc:hover { background:var(--surface-hover); transform:translateY(-6px); box-shadow:0 28px 64px rgba(0,0,0,.45), 0 0 60px rgba(0,255,136,.03); }
+    .gc:hover::after { opacity:1; }
+
+    /* ===== SERVICES ===== */
+    .services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:1.5rem; }
+    .sc { padding:2.25rem; transform-style:preserve-3d; will-change:transform; }
+    .si {
+      width:54px; height:54px; border-radius:15px;
+      background:rgba(0,255,136,.07); border:1px solid rgba(0,255,136,.14);
+      display:flex; align-items:center; justify-content:center; font-size:1.55rem;
+      margin-bottom:1.5rem; transition:all var(--tr);
+    }
+    .sc:hover .si { background:rgba(0,255,136,.14); transform:translateZ(18px) scale(1.06); }
+    .sname { font-size:1.12rem; font-weight:700; margin-bottom:.6rem; }
+    .sdesc { color:var(--muted); font-size:.88rem; line-height:1.7; margin-bottom:1.5rem; }
+    .sprice {
+      font-family:"Space Grotesk",sans-serif; font-size:1.55rem; font-weight:800;
+      background:var(--gradient); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
+    .sprice small { font-size:.78rem; color:var(--muted); -webkit-text-fill-color:var(--muted); }
+
+    /* ===== DIFERENCIAIS ===== */
+    .dif-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
+    .dc { padding:2rem 2.25rem; display:flex; gap:1.25rem; align-items:flex-start; }
+    .di {
+      width:50px; height:50px; flex-shrink:0; border-radius:14px;
+      background:rgba(0,212,255,.07); border:1px solid rgba(0,212,255,.14);
+      display:flex; align-items:center; justify-content:center; font-size:1.4rem;
+    }
+    .dname { font-size:1.05rem; font-weight:700; margin-bottom:.4rem; }
+    .ddesc { color:var(--muted); font-size:.88rem; line-height:1.7; }
+
+    /* ===== PORTFOLIO ===== */
+    .portfolio-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:1.75rem; }
+    .pc { overflow:hidden; }
+    .pimg {
+      width:100%; height:220px;
+      background:linear-gradient(135deg,#0c1118,#16202e);
+      display:flex; align-items:center; justify-content:center;
+      position:relative; overflow:hidden;
+    }
+    .pimg::after { content:""; position:absolute; inset:0; background:var(--gradient); opacity:0; transition:opacity var(--tr); }
+    .pc:hover .pimg::after { opacity:.07; }
+    .pimg-txt { color:#2d3748; font-size:.85rem; position:relative; z-index:1; }
+    .pbody { padding:1.75rem; }
+    .ptag {
+      display:inline-block; padding:.22rem .75rem; border-radius:100px;
+      font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+      background:rgba(0,255,136,.07); color:var(--g1); border:1px solid rgba(0,255,136,.2);
+      margin-bottom:.85rem;
+    }
+    .pname { font-size:1.12rem; font-weight:700; margin-bottom:.5rem; }
+    .pdesc { color:var(--muted); font-size:.88rem; line-height:1.7; }
+
+    /* ===== DEPOIMENTOS ===== */
+    .dep-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:1.75rem; }
+    .depc { padding:2.25rem; }
+    .deps { color:var(--g1); font-size:.9rem; margin-bottom:1.25rem; letter-spacing:3px; }
+    .dept { color:var(--dim); font-size:.95rem; line-height:1.8; margin-bottom:1.75rem; font-style:italic; }
+    .depa { display:flex; align-items:center; gap:.85rem; }
+    .depav {
+      width:46px; height:46px; border-radius:50%; flex-shrink:0;
+      background:linear-gradient(135deg,rgba(0,255,136,.12),rgba(0,212,255,.12));
+      border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:1.25rem;
+    }
+    .depan { font-weight:700; font-size:.95rem; }
+    .depar { color:var(--muted); font-size:.78rem; }
+
+    /* ===== CONTATO ===== */
+    .contato-grid { display:grid; grid-template-columns:1fr 1.6fr; gap:3.5rem; align-items:start; }
+    .clbl { font-size:.7rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase; color:var(--g1); margin-bottom:1rem; }
+    .ch { font-size:2rem; font-weight:800; margin-bottom:1rem; }
+    .cp { color:var(--muted); font-size:.95rem; margin-bottom:2rem; line-height:1.75; }
+    .ci { display:flex; align-items:center; gap:1rem; margin-bottom:1.25rem; }
+    .cic { width:40px; height:40px; background:rgba(0,255,136,.06); border:1px solid var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+    .cit { color:var(--muted); font-size:.88rem; }
+    .fc { padding:2.5rem; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+    .fd { margin-bottom:1.25rem; }
+    .fd label { display:block; font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:.5rem; }
+    .fd input, .fd textarea, .fd select {
+      width:100%; background:rgba(255,255,255,.03); border:1px solid var(--border);
+      border-radius:12px; padding:.9rem 1.1rem; color:var(--text);
+      font-size:.95rem; font-family:"Inter",sans-serif; outline:none; transition:all var(--tr);
+    }
+    .fd input:focus, .fd textarea:focus, .fd select:focus {
+      border-color:rgba(0,255,136,.4); background:rgba(0,255,136,.025);
+      box-shadow:0 0 0 4px rgba(0,255,136,.07);
+    }
+    .fd input.vld { border-color:rgba(0,255,136,.45); }
+    .fd input.ivld { border-color:rgba(255,70,70,.45); box-shadow:0 0 0 4px rgba(255,70,70,.06); }
+    .fd input::placeholder, .fd textarea::placeholder { color:#2d3748; }
+    .fd textarea { resize:vertical; min-height:130px; }
+    .fd select { appearance:none; cursor:none; }
+    .btn-sub { width:100%; justify-content:center; padding:1rem; font-size:1rem; border-radius:100px; }
+
+    /* ===== FOOTER ===== */
+    footer { border-top:1px solid var(--border); padding:2.5rem 0; }
+    .fi { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.25rem; }
+    .flo { font-family:"Space Grotesk",sans-serif; font-size:1.2rem; font-weight:800; text-decoration:none; color:var(--text); letter-spacing:-0.04em; }
+    .floc { color:var(--muted); font-size:.78rem; margin-top:.2rem; }
+    .fl { display:flex; gap:1.75rem; flex-wrap:wrap; }
+    .fl a { color:var(--muted); text-decoration:none; font-size:.88rem; transition:color var(--tr); }
+    .fl a:hover { color:var(--g1); }
+    .fcp { color:var(--muted); font-size:.78rem; }
+
+    /* ===== WHATSAPP FLOAT ===== */
+    .waf {
+      position:fixed; bottom:2rem; right:2rem; z-index:900;
+      width:62px; height:62px; background:#25d366; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      text-decoration:none; box-shadow:0 8px 32px rgba(37,211,102,.35);
+      transition:all var(--tr);
+    }
+    .waf:hover { transform:scale(1.1); box-shadow:0 16px 56px rgba(37,211,102,.5); }
+    .waf svg { width:30px; height:30px; fill:white; position:relative; z-index:1; }
+    .waf::before { content:""; position:absolute; width:62px; height:62px; background:rgba(37,211,102,.38); border-radius:50%; animation:warp 2.5s infinite; }
+    @keyframes warp { 0%{transform:scale(1);opacity:.6;} 100%{transform:scale(2.1);opacity:0;} }
+
+    /* ===== REVEAL ANIMATIONS ===== */
+    .rv { opacity:0; transform:translateY(30px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
+    .rv.d1{transition-delay:.1s;} .rv.d2{transition-delay:.2s;} .rv.d3{transition-delay:.3s;} .rv.d4{transition-delay:.45s;}
+    .rv.in { opacity:1; transform:translateY(0); }
+
+    /* ===== RESPONSIVE ===== */
+    @media(max-width:768px){
+      nav.desk{display:none;} .hdr-cta{display:none;} .hbg{display:flex;}
+      .contato-grid{grid-template-columns:1fr;} .form-row{grid-template-columns:1fr;}
+      section{padding:5rem 0;} .hero-stats{gap:2rem;}
+    }
+    @media(max-width:480px){
+      .hero-ctas{flex-direction:column;} .hero-ctas .btn{width:100%;justify-content:center;}
+      .fi{flex-direction:column;text-align:center;} .fl{justify-content:center;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor customizado -->
+  <div id="cdot"></div>
+  <div id="cring"></div>
+
+  <!-- Canvas — rede neural animada -->
+  <canvas id="cvs"></canvas>
+
+  <!-- =====================================================
+       HEADER
+       WHATSAPP — troque "34991234567" em todos os links wa.me
+       ===================================================== -->
+  <header id="header">
+    <div class="container">
+      <a href="#" class="logo">Manual<span class="logo-g">.do.Dev</span></a>
+      <nav class="desk">
+        <a href="#servicos">Serviços</a>
+        <a href="#diferenciais">Sobre</a>
+        <a href="#portfolio">Portfólio</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="#contato">Contato</a>
+      </nav>
+      <a href="https://wa.me/5534991234567?text=Ola!%20Vim%20pelo%20site%20e%20gostaria%20de%20saber%20mais." class="btn btn-g hdr-cta" target="_blank" rel="noopener">
+        <span>&#x1F4AC; Falar no WhatsApp</span>
+      </a>
+      <button class="hbg" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <nav class="mnav" id="mobileNav">
+      <a href="#servicos">Serviços</a>
+      <a href="#diferenciais">Sobre</a>
+      <a href="#portfolio">Portfólio</a>
+      <a href="#depoimentos">Depoimentos</a>
+      <a href="#contato">Contato</a>
+      <a href="https://wa.me/5534991234567" style="color:#25d366;font-weight:600;" target="_blank" rel="noopener">&#x1F4AC; WhatsApp</a>
+    </nav>
+  </header>
+
+  <!-- =====================================================
+       HERO — altere headline, subheadline e stats
+       ===================================================== -->
+  <section id="hero">
+    <div class="hero-glow"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="badge rv"><span class="bdot"></span>Agência digital premium em Uberaba, MG</div>
+        <h1 class="hero-title rv d1">
+          Transformamos seu negócio<br>
+          <span class="line2">em <span class="gt tw-wrap"><span class="tw" id="tw"></span></span></span>
+        </h1>
+        <p class="hero-sub rv d2">
+          Criamos sites, ecommerces, agentes de IA e automações para pequenas e médias empresas que querem dominar o digital em Uberaba e região.
+        </p>
+        <div class="hero-ctas rv d3">
+          <a href="#servicos" class="btn btn-g"><span>Explorar serviços &#x2193;</span></a>
+          <!-- WHATSAPP — troque 34991234567 -->
+          <a href="https://wa.me/5534991234567?text=Ola!%20Quero%20fazer%20meu%20projeto%20com%20a%20Manual.do.Dev!" class="btn btn-o" target="_blank" rel="noopener">&#x1F4AC; Falar agora</a>
+        </div>
+        <!-- STATS — altere os numeros e textos -->
+        <div class="hero-stats rv d4">
+          <div class="stat">
+            <span class="snum" data-target="50" data-suffix="+">0</span>
+            <span class="slbl">Projetos entregues</span>
+          </div>
+          <div class="stat">
+            <span class="snum" data-target="3" data-suffix=" dias">0</span>
+            <span class="slbl">Entrega média</span>
+          </div>
+          <div class="stat">
+            <span class="snum" data-target="100" data-suffix="%">0</span>
+            <span class="slbl">Satisfação garantida</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       SERVIÇOS — altere precos e descricoes
+       ===================================================== -->
+  <section id="servicos">
+    <div class="container">
+      <div class="sh">
+        <div class="slabel rv">Nossos serviços</div>
+        <h2 class="stitle rv d1">Soluções digitais <span class="gt">completas</span></h2>
+        <p class="ssub rv d2">Do planejamento ao lançamento, cuidamos de tudo para o seu negócio crescer</p>
+      </div>
+      <div class="services-grid">
+        <div class="gc sc rv">
+          <div class="si">&#x1F310;</div>
+          <h3 class="sname">Criação de Sites</h3>
+          <p class="sdesc">Sites profissionais, rápidos e responsivos que convertem visitantes em clientes. SEO e performance inclusos.</p>
+          <div class="sprice">R$ 1.500 <small>/ projeto</small></div>
+        </div>
+        <div class="gc sc rv d1">
+          <div class="si">&#x1F6D2;</div>
+          <h3 class="sname">Ecommerce</h3>
+          <p class="sdesc">Loja virtual completa com Pix, cartão, gestão de estoque e painel administrativo — pronta para vender.</p>
+          <div class="sprice">R$ 3.500 <small>/ projeto</small></div>
+        </div>
+        <div class="gc sc rv d2">
+          <div class="si">&#x1F916;</div>
+          <h3 class="sname">Agente de IA no WhatsApp</h3>
+          <p class="sdesc">Atendimento automático 24h com IA. Qualifique leads, responda dúvidas e feche vendas enquanto dorme.</p>
+          <div class="sprice">R$ 500 <small>/ setup</small></div>
+        </div>
+        <div class="gc sc rv d3">
+          <div class="si">&#x2699;&#xFE0F;</div>
+          <h3 class="sname">Automações</h3>
+          <p class="sdesc">Automatize processos repetitivos: agendamentos, notificações, relatórios e integrações entre sistemas.</p>
+          <div class="sprice">Sob consulta</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       DIFERENCIAIS
+       ===================================================== -->
+  <section id="diferenciais">
+    <div class="container">
+      <div class="sh">
+        <div class="slabel rv">Por que nos escolher</div>
+        <h2 class="stitle rv d1">Por que a <span class="gt">Manual.do.Dev</span>?</h2>
+        <p class="ssub rv d2">Trabalhamos com foco total no seu resultado, sem jargões técnicos</p>
+      </div>
+      <div class="dif-grid">
+        <div class="gc dc rv">
+          <div class="di">&#x26A1;</div>
+          <div>
+            <h3 class="dname">Entrega Rápida</h3>
+            <p class="ddesc">Projetos entregues em dias, não em meses. Processos ágeis, comunicação direta e sem burocracia.</p>
+          </div>
+        </div>
+        <div class="gc dc rv d1">
+          <div class="di">&#x1F6E1;&#xFE0F;</div>
+          <div>
+            <h3 class="dname">Suporte Contínuo</h3>
+            <p class="ddesc">Não sumimos depois de entregar. Estamos disponíveis para ajustes, evoluções e dúvidas do projeto.</p>
+          </div>
+        </div>
+        <div class="gc dc rv d2">
+          <div class="di">&#x1F4CD;</div>
+          <div>
+            <h3 class="dname">Foco em Resultados Locais</h3>
+            <p class="ddesc">Conhecemos Uberaba e região. Estratégias pensadas para o seu público local crescer de verdade.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       PORTFOLIO — substitua por projetos e imagens reais
+       Descomente a tag <img> e aponte para o arquivo
+       ===================================================== -->
+  <section id="portfolio">
+    <div class="container">
+      <div class="sh">
+        <div class="slabel rv">Nosso trabalho</div>
+        <h2 class="stitle rv d1">Projetos <span class="gt">recentes</span></h2>
+        <p class="ssub rv d2">Alguns dos projetos que já entregamos — substitua com os seus reais</p>
+      </div>
+      <div class="portfolio-grid">
+        <div class="gc pc rv">
+          <div class="pimg">
+            <!-- IMAGEM — descomente e troque o src: -->
+            <!-- <img src="portfolio/projeto-1.jpg" alt="Clínica Estética Bella" style="width:100%;height:100%;object-fit:cover;"> -->
+            <span class="pimg-txt">Imagem do projeto</span>
+          </div>
+          <div class="pbody">
+            <span class="ptag">Site Institucional</span>
+            <h3 class="pname">Clínica Estética Bella</h3>
+            <p class="pdesc">Site responsivo com agendamento online, galeria de procedimentos e integração com Google Agenda.</p>
+          </div>
+        </div>
+        <div class="gc pc rv d1">
+          <div class="pimg">
+            <!-- IMAGEM — descomente e troque o src: -->
+            <!-- <img src="portfolio/projeto-2.jpg" alt="Mercearia do Zé Online" style="width:100%;height:100%;object-fit:cover;"> -->
+            <span class="pimg-txt">Imagem do projeto</span>
+          </div>
+          <div class="pbody">
+            <span class="ptag">Ecommerce</span>
+            <h3 class="pname">Mercearia do Zé Online</h3>
+            <p class="pdesc">Loja virtual com +200 produtos, Pix, cartão e entrega programada por bairro em Uberaba.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       DEPOIMENTOS — substitua por depoimentos reais
+       ===================================================== -->
+  <section id="depoimentos">
+    <div class="container">
+      <div class="sh">
+        <div class="slabel rv">Clientes satisfeitos</div>
+        <h2 class="stitle rv d1">O que nossos <span class="gt">clientes dizem</span></h2>
+        <p class="ssub rv d2">Resultados reais de negócios reais em Uberaba e região</p>
+      </div>
+      <div class="dep-grid">
+        <div class="gc depc rv">
+          <div class="deps">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+          <p class="dept">"A Manual.do.Dev entregou meu site em 4 dias, exatamente como eu queria. Hoje recebo pedidos pelo WhatsApp todo dia. Atendimento impecável, recomendo demais!"</p>
+          <div class="depa">
+            <div class="depav">&#x1F469;</div>
+            <div>
+              <!-- Substitua pelo nome e cargo reais -->
+              <div class="depan">Ana Paula S.</div>
+              <div class="depar">Proprietária, Clínica Estética Bella — Uberaba</div>
+            </div>
+          </div>
+        </div>
+        <div class="gc depc rv d1">
+          <div class="deps">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+          <p class="dept">"Montamos a loja online em menos de uma semana e o suporte foi incrível. Qualquer dúvida resolvida na hora. Vendas cresceram 40% no primeiro mês!"</p>
+          <div class="depa">
+            <div class="depav">&#x1F468;</div>
+            <div>
+              <!-- Substitua pelo nome e cargo reais -->
+              <div class="depan">José Roberto M.</div>
+              <div class="depar">Proprietário, Mercearia do Zé — Uberaba</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       CONTATO
+       WHATSAPP — troque 34991234567 e o email abaixo
+       ===================================================== -->
+  <section id="contato">
+    <div class="container">
+      <div class="sh">
+        <div class="slabel rv">Fale conosco</div>
+        <h2 class="stitle rv d1">Vamos <span class="gt">conversar</span>?</h2>
+        <p class="ssub rv d2">Conta pra gente o seu projeto — te respondemos em até 1 hora</p>
+      </div>
+      <div class="contato-grid">
+        <div class="rv">
+          <p class="clbl">Contato direto</p>
+          <h3 class="ch">Prefere falar agora?</h3>
+          <p class="cp">Chame no WhatsApp e te atendemos na hora. Sem formulário, sem espera.</p>
+          <div class="ci"><div class="cic">&#x1F4CD;</div><span class="cit">Uberaba, MG — Brasil</span></div>
+          <!-- WHATSAPP — troque o numero abaixo -->
+          <div class="ci"><div class="cic">&#x1F4F1;</div><span class="cit">(34) 99123-4567</span></div>
+          <!-- EMAIL — troque pelo email real -->
+          <div class="ci"><div class="cic">&#x2709;&#xFE0F;</div><span class="cit">contato@manualdodev.com.br</span></div>
+          <a href="https://wa.me/5534991234567?text=Ola!%20Quero%20um%20orcamento." class="btn btn-g" style="margin-top:1.75rem;" target="_blank" rel="noopener">
+            <span>&#x1F4AC; Chamar no WhatsApp</span>
+          </a>
+        </div>
+        <div class="gc fc rv d1">
+          <form id="contactForm" onsubmit="handleSubmit(event)">
+            <div class="form-row">
+              <div class="fd">
+                <label for="fname">Nome</label>
+                <input type="text" id="fname" placeholder="Seu nome completo" required />
+              </div>
+              <div class="fd">
+                <label for="fwpp">WhatsApp</label>
+                <input type="tel" id="fwpp" placeholder="(34) 99000-0000" required />
+              </div>
+            </div>
+            <div class="fd">
+              <label for="femail">E-mail</label>
+              <input type="email" id="femail" placeholder="seu@email.com" required />
+            </div>
+            <div class="fd">
+              <label for="fservice">Serviço de interesse</label>
+              <select id="fservice">
+                <option value="">Selecione um serviço...</option>
+                <option value="site">Criação de Site</option>
+                <option value="ecommerce">Ecommerce</option>
+                <option value="ia">Agente de IA no WhatsApp</option>
+                <option value="automacao">Automações</option>
+                <option value="outro">Outro / Dúvida</option>
+              </select>
+            </div>
+            <div class="fd">
+              <label for="fmsg">Mensagem</label>
+              <textarea id="fmsg" placeholder="Conte sobre o seu projeto ou dúvida..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-g btn-sub"><span>Enviar mensagem &#x2192;</span></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="fi">
+        <div>
+          <a href="#" class="flo">Manual<span class="logo-g">.do.Dev</span></a>
+          <p class="floc">&#x1F4CD; Uberaba, MG — Brasil</p>
+        </div>
+        <div class="fl">
+          <a href="#servicos">Serviços</a>
+          <a href="#portfolio">Portfólio</a>
+          <a href="#contato">Contato</a>
+          <!-- WHATSAPP — troque 34991234567 -->
+          <a href="https://wa.me/5534991234567" target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+        <p class="fcp">&#169; 2025 Manual.do.Dev &#183; Todos os direitos reservados</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTAO FLUTUANTE WHATSAPP — troque 34991234567 -->
+  <a href="https://wa.me/5534991234567?text=Ola!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orcamento." class="waf" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <script>
+    /* =====================================================
+       CANVAS — rede neural animada no background
+       ===================================================== */
+    (function() {
+      var cvs = document.getElementById("cvs");
+      var ctx = cvs.getContext("2d");
+      var W, H, pts;
+      var N = window.innerWidth < 768 ? 55 : 110;
+      var DIST = 140;
+      var mouse = { x: -9999, y: -9999 };
+
+      function resize() {
+        W = cvs.width = window.innerWidth;
+        H = cvs.height = window.innerHeight;
+      }
+
+      function Pt() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.vx = (Math.random() - 0.5) * 0.45;
+        this.vy = (Math.random() - 0.5) * 0.45;
+        this.r = Math.random() * 1.5 + 0.5;
+        this.a = Math.random() * 0.5 + 0.15;
+      }
+
+      Pt.prototype.update = function() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > W) this.vx *= -1;
+        if (this.y < 0 || this.y > H) this.vy *= -1;
+      };
+
+      function init() { resize(); pts = []; for (var i = 0; i < N; i++) pts.push(new Pt()); }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        for (var i = 0; i < pts.length; i++) {
+          var p = pts[i]; p.update();
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(0,255,136," + (p.a * 0.75) + ")"; ctx.fill();
+          for (var j = i + 1; j < pts.length; j++) {
+            var q = pts[j];
+            var dx = p.x - q.x, dy = p.y - q.y, d = Math.sqrt(dx*dx + dy*dy);
+            if (d < DIST) {
+              var al = (1 - d / DIST) * 0.18;
+              ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
+              ctx.strokeStyle = "rgba(0,212,255," + al + ")"; ctx.lineWidth = 0.5; ctx.stroke();
+            }
+          }
+          var mdx = p.x - mouse.x, mdy = p.y - mouse.y, md = Math.sqrt(mdx*mdx + mdy*mdy);
+          if (md < 160) {
+            var ma = (1 - md / 160) * 0.55;
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = "rgba(0,255,136," + ma + ")"; ctx.lineWidth = 0.9; ctx.stroke();
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+
+      document.addEventListener("mousemove", function(e) { mouse.x = e.clientX; mouse.y = e.clientY; });
+      window.addEventListener("resize", init);
+      init(); draw();
+    })();
+
+    /* =====================================================
+       CURSOR CUSTOMIZADO com trailing (delay suave)
+       ===================================================== */
+    (function() {
+      var dot = document.getElementById("cdot");
+      var ring = document.getElementById("cring");
+      var mx = 0, my = 0, rx = 0, ry = 0;
+      document.addEventListener("mousemove", function(e) { mx = e.clientX; my = e.clientY; });
+      (function loop() {
+        dot.style.left = mx + "px"; dot.style.top = my + "px";
+        rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+        ring.style.left = rx + "px"; ring.style.top = ry + "px";
+        requestAnimationFrame(loop);
+      })();
+      document.querySelectorAll("a,button,.gc,input,textarea,select").forEach(function(el) {
+        el.addEventListener("mouseenter", function() { dot.classList.add("h"); ring.classList.add("h"); });
+        el.addEventListener("mouseleave", function() { dot.classList.remove("h"); ring.classList.remove("h"); });
+      });
+    })();
+
+    /* =====================================================
+       TYPEWRITER — alterne as palavras abaixo
+       ===================================================== */
+    (function() {
+      var words = ["resultados reais.", "mais vendas.", "presença digital.", "crescimento."];
+      var el = document.getElementById("tw");
+      var wi = 0, ci = 0, del = false;
+      function tick() {
+        var w = words[wi];
+        if (!del) {
+          el.textContent = w.substring(0, ++ci);
+          if (ci === w.length) { del = true; setTimeout(tick, 2200); return; }
+        } else {
+          el.textContent = w.substring(0, --ci);
+          if (ci === 0) { del = false; wi = (wi + 1) % words.length; setTimeout(tick, 320); return; }
+        }
+        setTimeout(tick, del ? 55 : 100);
+      }
+      setTimeout(tick, 1200);
+    })();
+
+    /* =====================================================
+       CONTADOR ANIMADO nas estatisticas
+       ===================================================== */
+    function animCount(el) {
+      var target = parseInt(el.getAttribute("data-target"), 10);
+      var suf = el.getAttribute("data-suffix") || "";
+      var dur = 1800, start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(eased * target) + suf;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    /* =====================================================
+       INTERSECTION OBSERVER — reveals + counters
+       ===================================================== */
+    var rvObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); rvObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -50px 0px" });
+    document.querySelectorAll(".rv").forEach(function(el) { rvObs.observe(el); });
+
+    var cntObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { animCount(e.target); cntObs.unobserve(e.target); }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll(".snum[data-target]").forEach(function(el) { cntObs.observe(el); });
+
+    /* =====================================================
+       TILT 3D nos cards de servico
+       ===================================================== */
+    document.querySelectorAll(".sc").forEach(function(card) {
+      card.addEventListener("mousemove", function(e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left - r.width / 2) / r.width * 14;
+        var y = (e.clientY - r.top - r.height / 2) / r.height * -14;
+        card.style.transform = "perspective(900px) rotateX(" + y + "deg) rotateY(" + x + "deg) translateY(-6px)";
+      });
+      card.addEventListener("mouseleave", function() {
+        card.style.transform = "perspective(900px) rotateX(0) rotateY(0) translateY(0)";
+      });
+    });
+
+    /* =====================================================
+       SCROLL — navbar + parallax hero
+       ===================================================== */
+    window.addEventListener("scroll", function() {
+      var h = document.getElementById("header");
+      window.scrollY > 60 ? h.classList.add("scrolled") : h.classList.remove("scrolled");
+      var glow = document.querySelector(".hero-glow");
+      if (glow && window.scrollY < window.innerHeight) {
+        glow.style.transform = "translateY(" + (window.scrollY * 0.28) + "px)";
+      }
+    });
+
+    /* =====================================================
+       HAMBURGER
+       ===================================================== */
+    var hbg = document.getElementById("hamburger");
+    var mnav = document.getElementById("mobileNav");
+    hbg.addEventListener("click", function() {
+      hbg.classList.toggle("a"); mnav.classList.toggle("open");
+    });
+    mnav.querySelectorAll("a").forEach(function(a) {
+      a.addEventListener("click", function() { hbg.classList.remove("a"); mnav.classList.remove("open"); });
+    });
+
+    /* =====================================================
+       FORMULARIO — validacao visual + envio via WhatsApp
+       WHATSAPP — troque 34991234567 na ultima linha
+       ===================================================== */
+    document.querySelectorAll("#contactForm input[required]").forEach(function(inp) {
+      inp.addEventListener("blur", function() {
+        inp.classList.toggle("vld", inp.value.trim().length > 0);
+        inp.classList.toggle("ivld", inp.value.trim().length === 0);
+      });
+      inp.addEventListener("input", function() { inp.classList.remove("ivld"); });
+    });
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      var name  = document.getElementById("fname").value.trim();
+      var email = document.getElementById("femail").value.trim();
+      var wpp   = document.getElementById("fwpp").value.trim();
+      var svc   = document.getElementById("fservice").value;
+      var msg   = document.getElementById("fmsg").value.trim();
+      var lbls  = {site:"Criação de Site", ecommerce:"Ecommerce", ia:"Agente de IA no WhatsApp", automacao:"Automações", outro:"Outro / Dúvida"};
+      var sl    = lbls[svc] || (svc.length > 0 ? svc : "Não informado");
+      var txt   = "Olá! Vim pelo site da Manual.do.Dev.\n\n*Nome:* " + name + "\n*E-mail:* " + email + "\n*WhatsApp:* " + wpp + "\n*Serviço:* " + sl + "\n\n*Mensagem:*\n" + msg;
+      /* WHATSAPP — troque 34991234567 pelo numero real */
+      window.open("https://wa.me/5534991234567?text=" + encodeURIComponent(txt), "_blank", "noopener");
+    }
+  </script>
+</body>
+</html>
