@@ -38,6 +38,7 @@
       --blur: 22px;
       --ease: cubic-bezier(.4,0,.2,1);
       --tr: .35s cubic-bezier(.4,0,.2,1);
+      --accent: #00ff88;
     }
     *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
     html { scroll-behavior:smooth; }
@@ -85,7 +86,7 @@
 
     /* ===== HEADER ===== */
     header {
-      position:fixed; top:0; left:0; right:0; z-index:1000;
+      position:fixed; top:36px; left:0; right:0; z-index:1000;
       padding:1.35rem 0; transition:all var(--tr);
     }
     header.scrolled {
@@ -145,7 +146,7 @@
     .mnav.open { display:flex; }
 
     /* ===== HERO ===== */
-    #hero { min-height:100vh; display:flex; align-items:center; padding-top:6rem; overflow:hidden; }
+    #hero { min-height:100vh; display:flex; align-items:center; padding-top:calc(6rem + 36px); overflow:hidden; }
     .hero-glow {
       position:absolute; inset:0; pointer-events:none;
       background:
@@ -385,12 +386,79 @@
     }
     @keyframes hotpulse { 0%,100%{box-shadow:0 4px 16px rgba(255,61,113,.4);} 50%{box-shadow:0 6px 28px rgba(255,61,113,.7);} }
 
+    /* ===== TOP BAR ===== */
+    .topbar {
+      position:fixed; top:0; left:0; right:0; height:36px; z-index:1001;
+      overflow:hidden; background:rgba(0,255,136,.1); border-bottom:1px solid rgba(0,255,136,.2);
+      display:flex; align-items:center;
+      font-size:12px; color:var(--accent); white-space:nowrap;
+    }
+    .topbar-track {
+      display:inline-flex; gap:5rem;
+      animation:tbslide 28s linear infinite;
+    }
+    @keyframes tbslide { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+
+    /* ===== FAQ ===== */
+    .faq-list { max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:.75rem; }
+    .faq-item { border:1px solid var(--border); border-radius:14px; background:var(--surface); backdrop-filter:blur(var(--blur)); overflow:hidden; transition:border-color var(--tr); }
+    .faq-item.open { border-color:rgba(0,255,136,.25); }
+    .faq-q {
+      width:100%; background:none; border:none; color:var(--text);
+      font-family:"Inter",sans-serif; font-size:1rem; font-weight:600;
+      padding:1.35rem 1.5rem; text-align:left; cursor:none;
+      display:flex; justify-content:space-between; align-items:center; gap:1rem;
+      transition:color var(--tr);
+    }
+    .faq-q:hover { color:var(--g1); }
+    .faq-sign {
+      width:26px; height:26px; border-radius:50%; flex-shrink:0;
+      border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center;
+      font-size:1.1rem; transition:all var(--tr); color:var(--muted);
+    }
+    .faq-item.open .faq-sign { background:rgba(0,255,136,.1); border-color:rgba(0,255,136,.35); color:var(--g1); transform:rotate(45deg); }
+    .faq-a { max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.4,0,.2,1); }
+    .faq-a-inner { padding:0 1.5rem 1.35rem; color:var(--muted); font-size:.93rem; line-height:1.75; }
+
+    /* ===== BANNER DIAGNÓSTICO ===== */
+    .diag-banner {
+      display:flex; align-items:center; gap:2rem; flex-wrap:wrap;
+      background:linear-gradient(135deg,rgba(0,255,136,.08),rgba(0,212,255,.08));
+      border:1px solid rgba(0,255,136,.3); border-radius:12px;
+      padding:24px 32px; margin-bottom:48px;
+    }
+    .diag-icon { font-size:2.8rem; flex-shrink:0; }
+    .diag-text { flex:1; min-width:200px; }
+    .diag-text strong { display:block; font-size:1.15rem; font-weight:700; margin-bottom:.35rem; }
+    .diag-text p { color:var(--muted); font-size:.9rem; line-height:1.6; margin:0; }
+    @media(max-width:600px){ .diag-banner{flex-direction:column; text-align:center;} .diag-banner .btn{width:100%;justify-content:center;} }
+
+    /* ===== COMO FUNCIONA ===== */
+    .steps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; position:relative; }
+    .steps-grid::before {
+      content:""; position:absolute; top:2.6rem; left:calc(100%/6); right:calc(100%/6);
+      height:1px; background:linear-gradient(90deg,transparent,rgba(0,255,136,.25),transparent);
+      pointer-events:none;
+    }
+    .step-card { padding:2.25rem; text-align:center; position:relative; z-index:1; }
+    .step-num {
+      width:48px; height:48px; border-radius:50%;
+      background:var(--gradient); color:#050505;
+      font-family:"Space Grotesk",sans-serif; font-size:1.15rem; font-weight:800;
+      display:flex; align-items:center; justify-content:center;
+      margin:0 auto 1.1rem;
+    }
+    .step-icon { font-size:1.9rem; margin-bottom:.85rem; }
+    .step-card h3 { font-size:1.05rem; font-weight:700; margin-bottom:.55rem; }
+    .step-card p { color:var(--muted); font-size:.88rem; line-height:1.7; }
+
     /* ===== RESPONSIVE ===== */
     @media(max-width:768px){
       nav.desk{display:none;} .hdr-cta{display:none;} .hbg{display:flex;}
       .contato-grid{grid-template-columns:1fr;} .form-row{grid-template-columns:1fr;}
       section{padding:5rem 0;} .hero-stats{gap:2rem;}
       .sobre-grid{grid-template-columns:1fr;} .ia-inner{padding:2rem;}
+      .steps-grid{grid-template-columns:1fr;} .steps-grid::before{display:none;}
     }
     @media(max-width:480px){
       .hero-ctas{flex-direction:column;} .hero-ctas .btn{width:100%;justify-content:center;}
@@ -399,6 +467,14 @@
   </style>
 </head>
 <body>
+
+  <!-- Top bar de urgência -->
+  <div class="topbar" aria-label="Avisos">
+    <div class="topbar-track">
+      <span>&#x26A1; Vagas abertas para maio &nbsp;&#xB7;&nbsp; Diagnóstico gratuito disponível &nbsp;&#xB7;&nbsp; Resposta em até 1 hora &nbsp;&#xB7;&nbsp; Atendimento 100% online &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <span>&#x26A1; Vagas abertas para maio &nbsp;&#xB7;&nbsp; Diagnóstico gratuito disponível &nbsp;&#xB7;&nbsp; Resposta em até 1 hora &nbsp;&#xB7;&nbsp; Atendimento 100% online &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </div>
+  </div>
 
   <!-- Cursor customizado -->
   <div id="cdot"></div>
@@ -519,6 +595,16 @@
         <h2 class="stitle rv d1">Soluções digitais <span class="gt">completas</span></h2>
         <p class="ssub rv d2">Do planejamento ao lançamento, cuidamos de tudo para o seu negócio crescer</p>
       </div>
+      <div class="diag-banner rv">
+        <div class="diag-icon">&#x1F381;</div>
+        <div class="diag-text">
+          <strong>Diagnóstico digital gratuito</strong>
+          <p>Analiso sua presença online e mostro o que está te fazendo perder clientes. Sem compromisso.</p>
+        </div>
+        <a href="https://wa.me/5534991234567?text=Ol%C3%A1!%20Quero%20o%20diagn%C3%B3stico%20digital%20gratuito." class="btn btn-g" target="_blank" rel="noopener">
+          <span>&#x1F4AC; Quero meu diagnóstico</span>
+        </a>
+      </div>
       <div class="services-grid">
         <div class="gc sc rv">
           <div class="si">&#x1F310;</div>
@@ -620,6 +706,38 @@
   </section>
 
   <!-- =====================================================
+       COMO FUNCIONA
+       ===================================================== -->
+  <section id="como-funciona">
+    <div class="container">
+      <div class="sh">
+        <div class="slabel rv">Processo simples</div>
+        <h2 class="stitle rv d1">Do contato ao site no ar <span class="gt">em 3 passos</span></h2>
+      </div>
+      <div class="steps-grid">
+        <div class="gc step-card rv">
+          <div class="step-num">1</div>
+          <div class="step-icon">&#x1F4DE;</div>
+          <h3>Conversa rápida</h3>
+          <p>Me conta o seu negócio pelo WhatsApp. Sem formulário, sem espera. Respondo em até 1 hora.</p>
+        </div>
+        <div class="gc step-card rv d1">
+          <div class="step-num">2</div>
+          <div class="step-icon">&#x1F3A8;</div>
+          <h3>Criação do projeto</h3>
+          <p>Desenvolvo o layout e apresento para sua aprovação. Ajustes ilimitados até ficar perfeito.</p>
+        </div>
+        <div class="gc step-card rv d2">
+          <div class="step-num">3</div>
+          <div class="step-icon">&#x1F680;</div>
+          <h3>Site no ar</h3>
+          <p>Publico, configuro o Google e te entrego com suporte. Em dias, não semanas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
        PORTFOLIO — substitua por projetos e imagens reais
        Descomente a tag <img> e aponte para o arquivo
        ===================================================== -->
@@ -692,6 +810,65 @@
               <div class="depan">José Roberto M.</div>
               <div class="depar">Proprietário, Mercearia do Zé — Uberaba</div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================================
+       FAQ
+       ===================================================== -->
+  <section id="faq">
+    <div class="container">
+      <div class="sh">
+        <div class="slabel rv">Dúvidas frequentes</div>
+        <h2 class="stitle rv d1">Perguntas que <span class="gt">todo mundo faz</span></h2>
+      </div>
+      <div class="faq-list rv d2">
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Quanto tempo leva para ficar pronto?
+            <span class="faq-sign">+</span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">Sites simples ficam prontos em 3 a 5 dias úteis. Ecommerces de 7 a 14 dias. Você acompanha tudo em tempo real.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Preciso entender de tecnologia?
+            <span class="faq-sign">+</span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">Zero. Você me conta o que precisa e cuido de tudo. Entrego pronto para usar.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            E se eu não gostar do resultado?
+            <span class="faq-sign">+</span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">Faço ajustes ilimitados até você aprovar. Só publico quando você estiver 100% satisfeito.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Vocês atendem fora de Uberaba?
+            <span class="faq-sign">+</span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">Sim! Atendo 100% online para todo o Brasil. Reuniões por WhatsApp ou Google Meet.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Como funciona o suporte após a entrega?
+            <span class="faq-sign">+</span>
+          </button>
+          <div class="faq-a">
+            <div class="faq-a-inner">30 dias de suporte gratuito inclusos. Depois disso, planos de manutenção a partir de R$ 150/mês.</div>
           </div>
         </div>
       </div>
@@ -991,6 +1168,26 @@
       /* WHATSAPP — troque 34991234567 pelo numero real */
       window.open("https://wa.me/5534991234567?text=" + encodeURIComponent(txt), "_blank", "noopener");
     }
+    /* =====================================================
+       FAQ ACCORDION
+       ===================================================== */
+    document.querySelectorAll(".faq-q").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var item = btn.closest(".faq-item");
+        var answer = item.querySelector(".faq-a");
+        var isOpen = item.classList.contains("open");
+        document.querySelectorAll(".faq-item").forEach(function(el) {
+          el.classList.remove("open");
+          el.querySelector(".faq-a").style.maxHeight = null;
+          el.querySelector(".faq-q").setAttribute("aria-expanded", "false");
+        });
+        if (!isOpen) {
+          item.classList.add("open");
+          answer.style.maxHeight = answer.scrollHeight + "px";
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
+    });
   </script>
 </body>
 </html>
