@@ -8,6 +8,13 @@
   <meta property="og:title" content="Manual.do.Dev — Seu negócio digital, do zero ao topo" />
   <meta property="og:description" content="Sites, ecommerces, agentes de IA e automações para PMEs em Uberaba, MG." />
   <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://0manualdodev0.github.io/manualdodev-site/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
   <title>Manual.do.Dev — Seu negócio digital, do zero ao topo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -588,7 +595,7 @@
           <!-- WHATSAPP — troque o numero abaixo -->
           <div class="ci"><div class="cic">&#x1F4F1;</div><span class="cit">(34) 99123-4567</span></div>
           <!-- EMAIL — troque pelo email real -->
-          <div class="ci"><div class="cic">&#x2709;&#xFE0F;</div><span class="cit">contato@manualdodev.com.br</span></div>
+          <div class="ci"><div class="cic">&#x2709;&#xFE0F;</div><span class="cit"><a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#116;&#111;&#64;&#109;&#97;&#110;&#117;&#97;&#108;&#100;&#111;&#100;&#101;&#118;&#46;&#99;&#111;&#109;&#46;&#98;&#114;" style="color:inherit;text-decoration:none;">&#99;&#111;&#110;&#116;&#97;&#116;&#111;&#64;&#109;&#97;&#110;&#117;&#97;&#108;&#100;&#111;&#100;&#101;&#118;&#46;&#99;&#111;&#109;&#46;&#98;&#114;</a></span></div>
           <a href="https://wa.me/5534991234567?text=Ola!%20Quero%20um%20orcamento." class="btn btn-g" style="margin-top:1.75rem;" target="_blank" rel="noopener">
             <span>&#x1F4AC; Chamar no WhatsApp</span>
           </a>
@@ -624,6 +631,7 @@
               <label for="fmsg">Mensagem</label>
               <textarea id="fmsg" placeholder="Conte sobre o seu projeto ou dúvida..." required></textarea>
             </div>
+            <input type="text" name="website" style="display:none !important" tabindex="-1" autocomplete="off">
             <button type="submit" class="btn btn-g btn-sub"><span>Enviar mensagem &#x2192;</span></button>
           </form>
         </div>
@@ -646,7 +654,7 @@
           <!-- WHATSAPP — troque 34991234567 -->
           <a href="https://wa.me/5534991234567" target="_blank" rel="noopener">WhatsApp</a>
         </div>
-        <p class="fcp">&#169; 2025 Manual.do.Dev &#183; Todos os direitos reservados</p>
+        <p class="fcp">&#169; 2026 Manual.do.Dev &#183; Todos os direitos reservados</p>
       </div>
     </div>
   </footer>
@@ -853,6 +861,7 @@
       var wpp   = document.getElementById("fwpp").value.trim();
       var svc   = document.getElementById("fservice").value;
       var msg   = document.getElementById("fmsg").value.trim();
+      if (document.querySelector('input[name="website"]').value !== '') return;
       var lbls  = {site:"Criação de Site", ecommerce:"Ecommerce", ia:"Agente de IA no WhatsApp", automacao:"Automações", outro:"Outro / Dúvida"};
       var sl    = lbls[svc] || (svc.length > 0 ? svc : "Não informado");
       var txt   = "Olá! Vim pelo site da Manual.do.Dev.\n\n*Nome:* " + name + "\n*E-mail:* " + email + "\n*WhatsApp:* " + wpp + "\n*Serviço:* " + sl + "\n\n*Mensagem:*\n" + msg;
