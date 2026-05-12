@@ -497,9 +497,17 @@
       section{padding:6.25rem 0;} .hero-stats{gap:2rem;}
       .sobre-grid{grid-template-columns:1fr;} .ia-inner{padding:2rem;}
       .steps-grid{grid-template-columns:1fr;} .steps-grid::before{display:none;}
+      /* Topbar: oculta no mobile, recupera espaço */
+      .topbar{display:none;}
+      header{top:0 !important;}
+      #hero{padding-top:5rem !important;}
+      /* Hero title: 2.4rem fixo no mobile */
+      .hero-title{font-size:2.4rem;}
+      /* Botões mobile */
+      .btn{min-height:52px;font-size:1rem;padding:14px 28px;width:100%;border-radius:12px;}
+      .hero-ctas{flex-direction:column;gap:12px;}
     }
     @media(max-width:480px){
-      .hero-ctas{flex-direction:column;} .hero-ctas .btn{width:100%;justify-content:center;}
       .fi{flex-direction:column;text-align:center;} .fl{justify-content:center;}
     }
   </style>
@@ -1051,8 +1059,9 @@
       var cvs = document.getElementById("cvs");
       var ctx = cvs.getContext("2d");
       var W, H, pts;
-      var N = window.innerWidth < 768 ? 55 : 110;
-      var DIST = 140;
+      const isMobile = window.innerWidth <= 768;
+      const PARTICLE_COUNT = isMobile ? 20 : 80;
+      const MAX_DISTANCE = isMobile ? 80 : 120;
       var mouse = { x: -9999, y: -9999 };
 
       function resize() {
@@ -1075,7 +1084,7 @@
         if (this.y < 0 || this.y > H) this.vy *= -1;
       };
 
-      function init() { resize(); pts = []; for (var i = 0; i < N; i++) pts.push(new Pt()); }
+      function init() { resize(); pts = []; for (var i = 0; i < PARTICLE_COUNT; i++) pts.push(new Pt()); }
 
       function draw() {
         ctx.clearRect(0, 0, W, H);
@@ -1086,8 +1095,8 @@
           for (var j = i + 1; j < pts.length; j++) {
             var q = pts[j];
             var dx = p.x - q.x, dy = p.y - q.y, d = Math.sqrt(dx*dx + dy*dy);
-            if (d < DIST) {
-              var al = (1 - d / DIST) * 0.18;
+            if (d < MAX_DISTANCE) {
+              var al = (1 - d / MAX_DISTANCE) * 0.18;
               ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
               ctx.strokeStyle = "rgba(0,212,255," + al + ")"; ctx.lineWidth = 0.5; ctx.stroke();
             }
